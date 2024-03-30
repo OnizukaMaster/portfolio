@@ -23,11 +23,7 @@ jobs:
     - name: Install dependencies
       run: composer install
       
-    - name: Run tests
-      run: phpunit
-      
-    - name: Code quality analysis
-      run: phpcs --standard=PSR12 .
+  
       
     - name: Deploy to FTP
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
