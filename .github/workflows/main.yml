@@ -1,0 +1,38 @@
+name: PHP CI/CD with FTP Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: PHP Test and Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0'
+        extensions: mbstring, intl, pdo, pdo_mysql # Add necessary extensions
+      
+    - name: Install dependencies
+      run: composer install
+      
+    - name: Run tests
+      run: phpunit
+      
+    - name: Code quality analysis
+      run: phpcs --standard=PSR12 .
+      
+    - name: Deploy to FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        remote-dir: '/public_html'
